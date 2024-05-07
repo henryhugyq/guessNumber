@@ -9,18 +9,24 @@ function Home() {
     const [chainId,setChainId] = useState();
     const [contract, setContract] = useState();
     const [provider,setProvider] = useState();
-    const[id,setId] = useState();
     const [to,setTo] = useState();
     const[amount,setAmount] = useState();
-
     const[greet,setGreeting] = useState();
+
+    //guessNumber
+    const[number,setNumber] = useState();
     // let constract = new Contract("",abi,singer)
 
     //合约地址和可读abi
-    const MYTOKEN_ADDRESS = "0x93C46FEdB8D958eA97B1EB097d84381bB9503eB6";
+    const MYTOKEN_ADDRESS = "0xab86B52ae30bf04bF0F5Cb843cCb0060582C7aDb";
     const MYTOKEN_ABI = [
-        "function contents(uint256) public",
-        "function contentCount() public view returns (uint256)"
+        "function owner() public view returns (address)",
+        "function guessNumber(uint _guess) external payable",
+        "function withdraw()",
+        "function gameEnded() public view returns (bool)",
+        "function endGame() external",
+        "function restartGame(uint _newTargetNumber) external",
+        "function setTargetNumber(uint _newTargetNumber) external",
     ];
 
     //点击按钮的时候登录
@@ -63,54 +69,84 @@ function Home() {
 
     }
 
-    //实现转账功能
-    const sendTransaction = async() =>{
-      const signer = await provider.getSigner();
-      const tx = {
-            to: to,
-            value:ethers.parseEther(amount)
-        };
-        const response =await signer.sendTransaction(tx);
-        console.log(response.hash)
-        alert(response.hash)
-    }
 
-    const setGreet = async() =>{
-        try {
-            let tx = await contract.setGreeting(greet)
-            //等待上链
-            await tx.wait()
-            alert(tx.hash)
-            console.log(tx)
-        }catch (error){
-            alert(error.message)
-        }
-    }
-    const getGreet = async() =>{
+
+    const getOwner = async() =>{
         console.log(contract)
-        try{ let a  = await contract.getGreeting();
+        try{ let a  = await contract.owner();
             alert(a);
         }catch (error){
             alert(error)
         }
         }
+        //guessNumber
+    const guessNumber = async ()=>{
+        try{
+            const tx = await contract.guessNumber(number,{
+                value: ethers.parseEther('0.01')
+            })
+            await tx.wait()
+            alert(tx.hash)
+        }catch (error){
+            alert(error.message)
+        }
+    }
 
-        const getContent = async() =>{
-        const a = await contract.contents(id)
-         alert(a)
-            console.log(a)
+    //withdraw
+    const withdraw = async () =>{
+        try {
+            const tx = await contract.withdraw()
+            await tx.wait()
+            alert(tx.hash)
+        }catch (error){
+            alert(error.message)
         }
 
-        const getCount = async () =>{
-        const count =await contract.contentCount()
-            alert(count)
+    }
+
+    //gameEnded
+    const getGameStatus = async () =>{
+        try{
+            const status = await contract.gameEnded()
+            alert(status)
+        }catch (error){
+            alert(error.message)
+        }
+    }
+    //endGame
+    const endGame = async () =>{
+        try{
+            const tx =await contract.endGame()
+            await tx.wait()
+            alert(tx.hash)
+        }catch (error){
+            alert(error.message)
+        }
+    }
+    //restartGame
+    const restart = async () =>{
+        try{
+            //这里的5是测试数据
+            const tx =await contract.restartGame(5)
+            await tx.wait()
+            alert(tx.hash)
+        }catch (error){
+            alert(error.message)
+        }
+    }
+    const setTargetNumber = async ()=>{
+        try{
+            const tx =await  contract.setTargetNumber(5)
+            await tx.wait()
+            alert(tx.hash)
+        }catch (error){
+            alert(error.message)
         }
 
-
+    }
     function handleChainChanged(chainId) {
         window.location.reload();
     }
-
 
 
     return (
@@ -134,68 +170,64 @@ function Home() {
             </div>
             <div className="container">
 
-                    <h1 id="title" style={{textAlign:'center' ,color:"deepskyblue"}}>🦄 Wallet Info</h1>
-                        <h2 style={{color:"#8ABCD1"}}>Network Type:{chainId}</h2>
-                        <h2 style={{color:"#1661AB"}}>Account:{account}</h2>
-                        <h2 style={{color:"#1661AB"}}>Balance:{balance}</h2>
+                <h1 id="title" style={{textAlign: 'center', color: "deepskyblue"}}>🦄 Wallet Info</h1>
+                <h2 style={{color: "#8ABCD1"}}>Network Type:{chainId}</h2>
+                <h2 style={{color: "#1661AB"}}>Account:{account}</h2>
+                <h2 style={{color: "#1661AB"}}>Balance:{balance}</h2>
 
-                        <hr/>
+                <hr/>
 
-                    <h1 id="title" style={{textAlign:'center' ,color:"#B0D992"}}>🐸 Transfer ETH</h1>
-                        <h2 style={{color:"#8DB799"}}>Recipient Address:</h2>
-                        <input
-                            type="text"
-                            id="toAddress"
-                            value={to}
-                            onChange={(e) => setTo(e.target.value)}
-                            placeholder="Enter recipient address|eg:0xbb6CA689d846e658544308ae4EBf4C623702E047"
-                        />
-                        <h2 style={{color:"#8DB799"}}>Amount (ETH):</h2>
-                        <input
-                            type="text"
-                            id="amount"
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                            placeholder="Enter amount in ETH|eg:0.01"
-                        />
-                        <br></br>
-                        <button onClick={sendTransaction}>Send</button>
-
-                        <hr/>
-
-                        <h1 id="title" style={{textAlign:'center' ,color:"#E9B6BE"}}>🌷 Call Contract</h1>
-                        <input
-                            type="text"
-                            id="greet"
-                            value={id}
-                            onChange={(e) => setId(e.target.value)}
-                            placeholder="Set the id to get the Content"
-                        />
-                        <button  onClick={getContent}>Get The Content</button>
-                        <button  onClick={getCount}>Get The Count</button>
-                        <h4 style={{textAlign:'center',color:"grey"}}>The Greeting Contract Address is <a href="https://www.oklink.com/cn/sepolia-test/address/0x76f5c15b459044542169151f335575f501cf5ec0" style={{textDecoration:"none",color:"lightslategrey"}}>0x76f5c15b459044542169151f335575f501cf5ec0</a></h4>
-                        <h5 style={{color:"chocolate",textAlign:'center'}}>Read the doc🦊<a href="https://docs.metamask.io/wallet/">https://docs.metamask.io/wallet/</a></h5>
-                        <h5 style={{color:"slateblue",textAlign:'center'}}>Ethers.js v6🍃<a href="https://docs.ethers.org/v6/">https://docs.ethers.org/v6/</a></h5>
+                <h1 id="title" style={{textAlign: 'center', color: "#E9B6BE"}}>🌷 Call Contract</h1>
+                <input
+                    type="text"
+                    id="greet"
+                    value={number}
+                    onChange={(e) => setNumber(e.target.value)}
+                    placeholder="Input your guess Number"
+                />
+                <button onClick={guessNumber}>Guess the Number</button>
+                <button onClick={getOwner}>Get The Owner</button>
+                <button onClick={withdraw}>Withdraw</button>
+                <br/>
+                <br/>
+                <button onClick={getGameStatus}>GameEnded</button>
+                <button onClick={endGame}>endGame</button>
+                <br/>
+                <br/>
+                <button onClick={setTargetNumber}>setTargetNumber</button>
+                <br/>
+                <br/>
+                <button onClick={restart}>restart</button>
+                <h4 style={{textAlign: 'center', color: "grey"}}>The Greeting Contract Address is <a
+                    href="https://www.oklink.com/cn/sepolia-test/address/0x76f5c15b459044542169151f335575f501cf5ec0"
+                    style={{
+                        textDecoration: "none",
+                        color: "lightslategrey"
+                    }}>0x76f5c15b459044542169151f335575f501cf5ec0</a></h4>
+                <h5 style={{color: "chocolate", textAlign: 'center'}}>Read the doc🦊<a
+                    href="https://docs.metamask.io/wallet/">https://docs.metamask.io/wallet/</a></h5>
+                <h5 style={{color: "slateblue", textAlign: 'center'}}>Ethers.js v6🍃<a
+                    href="https://docs.ethers.org/v6/">https://docs.ethers.org/v6/</a></h5>
 
 
             </div>
 
 
             <style jsx>
-                {`
-                  * {
-                    box-sizing: border-box;
-                  }
+            {`
+                    * {
+                        box-sizing: border-box;
+                    }
 
-                  body {
-                    font-family: Arial;
-                    padding: 10px;
-                    background: #f1f1f1;
-                  }
+                    body {
+                        font-family: Arial;
+                        padding: 10px;
+                        background: #f1f1f1;
+                    }
 
 
-                  .top {
-                    overflow: hidden;
+                    .top {
+                        overflow: hidden;
                     background-color: #E5DFD5;
                     padding: 10px;
                     margin-top: 0;
