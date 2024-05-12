@@ -1,5 +1,5 @@
 {
-  "name": "metamask",
+  "name": "web3prophet",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -9,6 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@douyinfe/semi-icons": "^2.58.0",
+    "@douyinfe/semi-icons-lab": "^2.58.0",
+    "@douyinfe/semi-ui": "^2.58.0",
     "ethers": "^6.11.1",
     "next": "^14.1.4",
     "react": "^18.2.0",
