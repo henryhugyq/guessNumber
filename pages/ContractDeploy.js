@@ -150,7 +150,7 @@ const ContractDeploy =({goToContractCall}) =>{
                         <br/>
                         <a><a style={{color:"rgba(var(--semi-grey-9), 1)"}}>原结果为:</a><Paragraph copyable={{ onCopy: () => Toast.success({ content: '复制文本成功' }) }} style={{color:"rgba(var(--semi-orange-5), 1)"}} strong>{encryptedTargetNumber2}</Paragraph></a>
                         <a><a style={{color:"rgba(var(--semi-grey-9), 1)"}}>干扰结果为:</a><Paragraph copyable={{ onCopy: () => Toast.success({ content: '复制文本成功' }) }} style={{color:"rgba(var(--semi-orange-5), 1)"}} strong>{encryptedTargetNumber}</Paragraph></a>
-                        <p style={{color:"rgba(var(--semi-red-6), 1)"}} ><IconAlertTriangle />正式环境中，若干扰参数未更新，此功能不应该对contract owner以外的用户开放</p>
+                        <p style={{color:"rgba(var(--semi-red-6), 1)"}} ><IconAlertTriangle />干扰参数需要不定期更新，防止猜测计算规律</p>
                     </div>
                 )}
 
