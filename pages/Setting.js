@@ -24,7 +24,7 @@ const Setting =() =>{
                     padding: '32px',
                 }}
             >
-                <h1>This is Setting Content</h1>
+                <h1>This is Setting Content web3 prophet</h1>
             </div>
         </Content>
     )
