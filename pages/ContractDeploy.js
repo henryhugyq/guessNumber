@@ -123,7 +123,7 @@ const ContractDeploy =({goToContractCall}) =>{
                     className="image"
                     width={500}
                     height={400}
-                    src="../static/img.png"
+                    src="../static/img_1.png"
                     style={{float:"right",marginTop:-120}}
                 />
                 <br/>
