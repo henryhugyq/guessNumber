@@ -60,8 +60,8 @@ const ContractCall =({contractAddress}) =>{
 
     //猜数字,提交哈希与链上比对
     const guess = async ()=>{
+        await newContract()
         try{
-            await newContract()
             const tx = await contract.guessNumber(ethers.keccak256(new Uint8Array([ number,secret_value])));
             await tx.wait()
 
@@ -84,6 +84,7 @@ const ContractCall =({contractAddress}) =>{
 
     //付游戏费,默认0.0001
     const payToPlay = async ()=>{
+        await newContract()
         try{
             const tx = await contract.payToPlay({
                 value: ethers.parseEther('0.0001')
@@ -96,6 +97,7 @@ const ContractCall =({contractAddress}) =>{
     }
     //查询谜底
     const targetNumberHash = async ()=>{
+        await newContract()
         try {
             const targetHash = await contract.encryptedTargetNumber()
             Toast.info("本回合谜底（keccak256）为："+targetHash)
@@ -105,6 +107,7 @@ const ContractCall =({contractAddress}) =>{
     }
     //查询游戏状态
     const gameStatus = async ()=>{
+        await newContract()
         try {
             const status = await contract.gameEnded()
             Toast.info("本回合游戏状态是："+status)
@@ -113,8 +116,9 @@ const ContractCall =({contractAddress}) =>{
         }
     }
 
-    //查询游戏次数
+    //查询游戏次数,切换账户重置singer
     const leftCount = async ()=>{
+        await newContract()
        try {
            const count = await contract.guessesLeft(account)
            Toast.info("此账户还剩余"+count+"次机会。请及时充值")
@@ -125,6 +129,7 @@ const ContractCall =({contractAddress}) =>{
 
     //重置游戏
     const restartGame = async ()=>{
+        await newContract()
         try{
             const tx = await contract.restartGame(ethers.keccak256(new Uint8Array([ number2,secret_value])))
             await tx.wait()
@@ -196,12 +201,12 @@ const ContractCall =({contractAddress}) =>{
             </div>
             <style jsx>
                 {`
-                 button {
+                  button {
                     padding: 9px 16px;
                     max-height: 40px;
-                    border-color: #c8f8b8;
-                    color: #e7c8a1;
-                    background-color: #f1ebc5;
+                    border-color: #cad3c3;
+                    color: #b0A4E3;
+                    background-color: #F9E8D0;
                     border-radius: 8px;
                     align-items: center;
                     font-size: 16px;
@@ -209,15 +214,15 @@ const ContractCall =({contractAddress}) =>{
                     text-align: center;
                     font-weight: bold;
                     cursor: pointer;
-                  }  
-                  
-                   input {
+                  }
+
+                  input {
                     border-bottom-style: groove;
                     font-size: 16px;
                     width: 63.5%;
                     border-color: rgba(var(--semi-grey-9), 1);
                     line-height: 32px;
-                  }         
+                  }
                 `}
             </style>
         </Content>
