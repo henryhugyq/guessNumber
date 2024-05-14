@@ -235,7 +235,7 @@ function Home() {
                                         >
                                             <Avatar
                                                 alt="beautiful cat"
-                                                src="../static/img.png"
+                                                src="../static/img_2.jpg"
                                                 style={{ margin: 4 }}
                                             />
                                         </Dropdown>
