@@ -72,7 +72,7 @@ const ContractDeploy =({goToContractCall}) =>{
             theme: 'light',
         };
         Toast.success(opts)
-        //部署后跳转到Mint合约
+        //部署后跳转到Call页面
         goToContractCall(contractAddress);
     }
 
